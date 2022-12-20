@@ -13,4 +13,9 @@ public class Menu : MonoBehaviour
     {
         Loader.Load(Loader.Scene.GameScene);
     }
+
+    public void ReturnToMenu()
+    {
+        Loader.Load(Loader.Scene.MainMenu);
+    }
 }
