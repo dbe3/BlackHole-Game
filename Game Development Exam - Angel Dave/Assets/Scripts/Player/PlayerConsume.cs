@@ -1,13 +1,15 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 
 public class PlayerConsume : MonoBehaviour
 {
     [Header("Player Growing Attributes")]
-    public float Mass;
     public float GrowSize;
     public float GrowSpeed;
+    public float MaxMass;
     bool Grow;
+
     Vector2 NewScale;
 
     [Space(5)]
@@ -16,6 +18,15 @@ public class PlayerConsume : MonoBehaviour
     [Header("Scripts")]
     public Score ScoreScript;
     public CameraController CameraScript;
+    public GameManager GameManagerScript;
+
+    public delegate void Consumption();
+    public static event Consumption OnConsumption;
+
+    public void Start()
+    {
+        GameManagerScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+    }
 
     public void OnCollisionEnter2D(Collision2D coll)
     {
@@ -27,6 +38,7 @@ public class PlayerConsume : MonoBehaviour
 
                 if (PlayerRb.mass > coll.gameObject.GetComponent<Rigidbody2D>().mass)
                 {
+                    OnConsumption();
                     Consume(consumableScript);
                 }
             }
@@ -50,16 +62,25 @@ public class PlayerConsume : MonoBehaviour
 
     public void Consume(Consumable consumableScript)
     {
-        NewScale = new Vector3(transform.localScale.x + GrowSize, transform.localScale.y + GrowSize, transform.localScale.z + GrowSize);
-        Grow = true;
-
         ScoreScript.AddScore(consumableScript.PointAmt);
+
+        NewScale = new Vector3(transform.localScale.x + GrowSize, transform.localScale.y + GrowSize, transform.localScale.z + GrowSize);
+        PlayerGrow();
+
+        GameManagerScript.RemoveFromList(consumableScript.gameObject);
         Destroy(consumableScript.gameObject);
     }
 
-    //public void Grow()
-    //{
-    //    transform.localScale = new Vector2(transform.localScale.x + GrowSize, transform.localScale.y + GrowSize);
-    //}
+    public void PlayerGrow()
+    {
+        if (PlayerRb.mass > MaxMass)
+        {
+            Grow = false;
+        }
+        else
+        {
+            Grow = true;
+        }
+    }
 
 }
