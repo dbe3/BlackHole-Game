@@ -23,6 +23,7 @@ public class PlayerConsume : MonoBehaviour
     public delegate void Consumption();
     public static event Consumption OnConsumption;
 
+    public int AmountToPool;
     public void Start()
     {
         GameManagerScript = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
@@ -67,8 +68,8 @@ public class PlayerConsume : MonoBehaviour
         NewScale = new Vector3(transform.localScale.x + GrowSize, transform.localScale.y + GrowSize, transform.localScale.z + GrowSize);
         PlayerGrow();
 
-        GameManagerScript.RemoveFromList(consumableScript.gameObject);
-        Destroy(consumableScript.gameObject);
+        consumableScript.gameObject.SetActive(false);
+        GameManagerScript.SpawnConsumable();
     }
 
     public void PlayerGrow()

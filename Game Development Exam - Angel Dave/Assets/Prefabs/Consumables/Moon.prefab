@@ -136,6 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed48be75f14712945ac96b059a4e3d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: 
-  Mass: 3
   PointAmt: 2
+  MaxSpawn: 10
